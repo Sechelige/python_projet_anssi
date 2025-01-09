@@ -26,21 +26,25 @@
     <div class="container mt-5">
         <h1 class="text-center text-primary mb-4">Graphiques Dynamiques - Analyse des Vulnérabilités</h1>
 
-        <!-- Row avec les graphiques -->
+        <!-- Graphiques affichés un par un -->
         <div class="row">
             <!-- Card: CVSS Histogram -->
-            <div class="col-lg-6 col-md-12 mb-4">
+            <div class="col-md-12 mb-4">
                 <div class="card shadow-sm">
                     <div class="card-body">
+                        <h3 class="text-secondary">Histogramme des Scores CVSS</h3>
                         <div id="cvss_histogram"></div>
                     </div>
                 </div>
             </div>
+        </div>
 
+        <div class="row">
             <!-- Card: CWE Pie Chart -->
-            <div class="col-lg-6 col-md-12 mb-4">
+            <div class="col-md-12 mb-4">
                 <div class="card shadow-sm">
                     <div class="card-body">
+                        <h3 class="text-secondary">Diagramme Circulaire des Types de Vulnérabilités (CWE)</h3>
                         <div id="cwe_pie"></div>
                     </div>
                 </div>
@@ -49,18 +53,22 @@
 
         <div class="row">
             <!-- Card: EPSS Line Chart -->
-            <div class="col-lg-6 col-md-12 mb-4">
+            <div class="col-md-12 mb-4">
                 <div class="card shadow-sm">
                     <div class="card-body">
+                        <h3 class="text-secondary">Courbe des Scores EPSS</h3>
                         <div id="epss_line"></div>
                     </div>
                 </div>
             </div>
+        </div>
 
+        <div class="row">
             <!-- Card: Products Bar Chart -->
-            <div class="col-lg-6 col-md-12 mb-4">
+            <div class="col-md-12 mb-4">
                 <div class="card shadow-sm">
                     <div class="card-body">
+                        <h3 class="text-secondary">Classement des Produits les Plus Affectés</h3>
                         <div id="products_bar"></div>
                     </div>
                 </div>
@@ -69,18 +77,22 @@
 
         <div class="row">
             <!-- Card: Heatmap -->
-            <div class="col-lg-6 col-md-12 mb-4">
+            <div class="col-md-12 mb-4">
                 <div class="card shadow-sm">
                     <div class="card-body">
+                        <h3 class="text-secondary">Corrélation entre CVSS et EPSS</h3>
                         <div id="heatmap"></div>
                     </div>
                 </div>
             </div>
+        </div>
 
+        <div class="row">
             <!-- Card: Scatter Plot -->
-            <div class="col-lg-6 col-md-12 mb-4">
+            <div class="col-md-12 mb-4">
                 <div class="card shadow-sm">
                     <div class="card-body">
+                        <h3 class="text-secondary">Nuage de Points entre CVSS et EPSS</h3>
                         <div id="scatter_plot"></div>
                     </div>
                 </div>
@@ -89,18 +101,22 @@
 
         <div class="row">
             <!-- Card: Boxplot -->
-            <div class="col-lg-6 col-md-12 mb-4">
+            <div class="col-md-12 mb-4">
                 <div class="card shadow-sm">
                     <div class="card-body">
+                        <h3 class="text-secondary">Distribution des Scores CVSS par Éditeur</h3>
                         <div id="boxplot"></div>
                     </div>
                 </div>
             </div>
+        </div>
 
+        <div class="row">
             <!-- Card: Time Series -->
-            <div class="col-lg-6 col-md-12 mb-4">
+            <div class="col-md-12 mb-4">
                 <div class="card shadow-sm">
                     <div class="card-body">
+                        <h3 class="text-secondary">Évolution Temporelle des Vulnérabilités Détectées</h3>
                         <div id="time_series"></div>
                     </div>
                 </div>

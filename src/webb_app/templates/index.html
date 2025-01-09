@@ -3,106 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Présentation du Projet</title>
+    <title>Analyse ANSSI - Présentation</title>
     <!-- Lien Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Lien pour les icônes Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
 </head>
 <body>
     <!-- Barre de navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">Analyse ANSSI</a>
-            <ul class="navbar-nav ml-auto">
-                <!-- Lien vers la page des graphiques -->
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('charts') }}">Voir les Graphiques</a>
-                </li>
-            </ul>
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-shield-lock"></i> Analyse ANSSI
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Basculer la navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('charts') }}">
+                            <i class="bi bi-bar-chart"></i> Graphiques
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </nav>
 
     <!-- Section principale -->
     <div class="container mt-5">
-        <div class="row">
-            <div class="col-lg-12">
-                <h1 class="text-center text-primary">Analyse des Avis et Alertes ANSSI</h1>
-                <p class="text-center text-muted">Un projet pour enrichir, analyser et visualiser les données des vulnérabilités ANSSI.</p>
-            </div>
-        </div>
+        <!-- Titre principal -->
+        <header class="text-center">
+            <h1 class="text-primary">Analyse des Avis et Alertes ANSSI</h1>
+            <p class="text-muted">Un projet pour analyser et visualiser les vulnérabilités de manière exploitable.</p>
+        </header>
 
         <!-- Contexte et Objectifs -->
-        <div class="row mt-4">
-            <div class="col-md-12">
-                <h2 class="text-secondary">1. Contexte et Objectifs</h2>
-                <p>
-                    Face à la montée des attaques informatiques, l'ANSSI joue un rôle clé dans la 
-                    publication d'avis et alertes de sécurité. Cependant, les données qu'elle fournit 
-                    sont difficiles à exploiter de manière automatisée, contrairement au NIST.
-                </p>
-                <p>
-                    Ce projet vise à développer un outil capable de traiter, enrichir et analyser 
-                    les données des flux RSS de l'ANSSI pour en tirer des conclusions exploitables.
-                </p>
-            </div>
-        </div>
+        <section class="mt-5">
+            <h2 class="text-secondary">1. Contexte et Objectifs</h2>
+            <p>
+                Face à la montée des attaques informatiques, l'ANSSI publie des avis et alertes de sécurité. Cependant, ces données sont souvent
+                complexes à exploiter de manière automatisée. Ce projet vise à simplifier ce processus en :
+            </p>
+            <ul>
+                <li>Traitant les flux RSS des avis et alertes ANSSI.</li>
+                <li>Enrichissant les données grâce à des API externes.</li>
+                <li>Proposant des analyses et des graphiques interactifs.</li>
+            </ul>
+        </section>
 
         <!-- Objectifs du Projet -->
-        <div class="row mt-4">
-            <div class="col-md-12">
-                <h2 class="text-secondary">2. Objectifs du Projet</h2>
-                <ul>
-                    <li>Extraire les données des flux RSS des avis et alertes ANSSI.</li>
-                    <li>Identifier et enrichir les CVE mentionnées via des API externes.</li>
-                    <li>Consolider les données dans un format exploitable.</li>
-                    <li>Analyser les vulnérabilités et visualiser les résultats.</li>
-                    <li>Générer des alertes personnalisées et envoyer des notifications par email.</li>
-                </ul>
-            </div>
-        </div>
+        <section class="mt-4">
+            <h2 class="text-secondary">2. Objectifs du Projet</h2>
+            <ul>
+                <li>Extraire et enrichir les CVE mentionnées dans les alertes.</li>
+                <li>Visualiser les vulnérabilités avec des graphiques dynamiques.</li>
+                <li>Notifier les abonnés des nouvelles vulnérabilités.</li>
+            </ul>
+        </section>
 
-        <!-- Consulter nos Graphiques et Abonnement à la Mailing List côte à côte -->
-        <div class="row mt-4">
-            <!-- Section Graphiques -->
-            <div class="col-md-6">
-                <h2 class="text-secondary">Consultez nos Graphiques</h2>
-                <p>
-                    Pour visualiser les données des vulnérabilités ANSSI sous forme de graphiques interactifs, 
-                    veuillez consulter la page dédiée.
-                </p>
-                <p>
-                    <a href="{{ url_for('charts') }}" class="btn btn-primary">Voir les Graphiques</a>
-                </p>
-            </div>
+        <!-- Section Graphiques -->
+        <section class="mt-5">
+            <h3 class="text-secondary">Consultez nos Graphiques</h3>
+            <p>
+                Découvrez des visualisations interactives des données ANSSI, incluant des histogrammes,
+                des courbes et des cartes de corrélation.
+            </p>
+            <a href="{{ url_for('charts') }}" class="btn btn-primary">
+                <i class="bi bi-bar-chart-line"></i> Voir les Graphiques
+            </a>
+        </section>
 
-            <!-- Formulaire d'abonnement -->
-            <div class="col-md-6">
-                <h2 class="text-secondary">Abonnez-vous à notre mailing list d'alertes</h2>
-                <!-- Flash messages -->
-                {% with messages = get_flashed_messages(with_categories=true) %}
-                  {% if messages %}
-                    <div class="mt-3">
-                      {% for category, message in messages %}
-                        <div class="alert alert-{{ category }}" role="alert">
-                          {{ message }}
-                        </div>
-                      {% endfor %}
+        <!-- Section Abonnement -->
+        <section class="mt-5">
+            <h3 class="text-secondary">Abonnez-vous à nos alertes</h3>
+            <p>
+                Restez informé des dernières vulnérabilités avec des alertes personnalisées directement par email.
+            </p>
+            <!-- Flash messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+              {% if messages %}
+                <div class="mt-3">
+                  {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}" role="alert">
+                      {{ message }}
                     </div>
-                  {% endif %}
-                {% endwith %}
-                <form method="POST" action="/">
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Adresse email</label>
-                        <input type="email" class="form-control" id="email" name="email" placeholder="Votre email" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100">S'abonner</button>
-                </form>
-            </div>
-        </div>
+                  {% endfor %}
+                </div>
+              {% endif %}
+            {% endwith %}
+            <form method="POST" action="/" class="mt-3">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Votre adresse email</label>
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Entrez votre email" required>
+                </div>
+                <button type="submit" class="btn btn-success w-100">
+                    <i class="bi bi-envelope-check"></i> S'abonner
+                </button>
+            </form>
+        </section>
     </div>
 
     <!-- Footer -->
-    <footer class="bg-dark text-white text-center py-3 mt-5">
-        <p>&copy; 2024 - Projet Analyse ANSSI | ESILV</p>
+    <footer class="bg-dark text-white text-center py-4 mt-5">
+        <p class="mb-0">
+            &copy; 2024 - Projet Analyse ANSSI | ESILV <br>
+            Développé avec <i class="bi bi-heart-fill text-danger"></i> par l'équipe de projet.
+        </p>
     </footer>
 
     <!-- Lien Bootstrap JS -->
