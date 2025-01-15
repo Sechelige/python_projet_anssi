@@ -1,33 +1,45 @@
 import feedparser
 import requests
 import re
+import time
 import pandas as pd
-import json
 
-# URLs des flux RSS
-flux_RSS_urls = {
-    "Avis": "https://www.cert.ssi.gouv.fr/avis/feed",
-    "Alerte": "https://www.cert.ssi.gouv.fr/alerte/feed"
-}
 
-def fetch_rss_data(flux_urls):
-    rss_data = []
-    for flux_type, url in flux_urls.items():
-        flux = feedparser.parse(url)
-        for entry in flux.entries:
-            rss_entry = {
-                "Titre": entry.title,
-                "Description": entry.description,
-                "Lien": entry.link,
-                "Date": entry.published,
-                "Type": flux_type
-            }
-            rss_data.append(rss_entry)
-    return rss_data
 
-# Appel de la fonction
-rss_data = fetch_rss_data(flux_RSS_urls)
-print(f"Nombre d'entrées : {len(rss_data)}")
+#URL du flux RSS
+url = "https://www.cert.ssi.gouv.fr/avis/feed"
+uvl = "https://www.cert.ssi.gouv.fr/alerte/feed"
+rss_feed_avis = feedparser.parse(url)
+rss_feed_alerte = feedparser.parse(uvl)
+
+#Initialisation d'une liste pour stocker les informations
+rss_data = []
+
+#Parcours des entrées du flux RSS
+for entry in rss_feed_avis.entries:
+    # Création d'un dictionnaire pour chaque entrée
+    rss_entry = {
+        "Titre": entry.title, 
+        "Description": entry.description,
+        "Lien": entry.link,
+        "Date": entry.published #pas besoin recuperer sur bulletin anssi
+    }
+
+    # Ajout du dictionnaire à la liste
+    rss_data.append(rss_entry)
+
+for entry in rss_feed_alerte.entries :
+    rss_entry_b = {
+        "Titre": entry.title, 
+        "Description": entry.description,
+        "Lien": entry.link,
+        "Date": entry.published #pas besoin recuperer sur bulletin anssi
+    }
+
+    rss_data.append(rss_entry_b)
+
+#Affichage du tableau (liste de dictionnaires)
+#print(rss_data)
 
 #Liste pour stocker tous les CVE trouvés dans chaque lien RSS
 all_cve_list = []
@@ -49,10 +61,22 @@ for entry in rss_data:
         data = response.json()
 
          # Extraire les informations désirées
-        editeur = data["affected_systems"][0]["product"]["vendor"]["name"]  # Nom de l'éditeur
-        date_publication = data["vendor_advisories"][0]["published_at"]  # Date de publication
+        if data.get("affected_systems") and len(data["affected_systems"]) > 0:
+            editeur = data["affected_systems"][0]["product"]["vendor"]["name"]
+        else:
+            editeur = "Non disponible"
+        if data.get("vendor_advisories") and len(data["vendor_advisories"]) > 0:
+            date_publication = data["vendor_advisories"][0]["published_at"]
+        else:
+            date_publication = "Non disponible"
         produits = [sys["product"]["name"] for sys in data["affected_systems"]]  # Liste des produits
         versions = [sys["description"] for sys in data["affected_systems"]]  # Liste des versions affectées
+        type_b = data["reference"].split("-")[2]
+
+        if type_b == "AVI" :
+            type_bulletin = "Avis"
+        else :
+            type_bulletin = "Alerte"
 
         # Extraction des références CVE à partir de la clé "cves"
         ref_cves = list(data.get("cves", []))  # Assure-toi que "cves" existe dans la réponse
@@ -70,6 +94,7 @@ for entry in rss_data:
             "Date publication bulletin anssi" : date_publication,
             "Produits impactés" : produits,
             "Versions concernés" : versions,
+            "Type du bulletin" : type_bulletin,
         }
 
         all_data_cert_anssi.append(data_cert_anssi)
@@ -209,7 +234,7 @@ for entry, cert_data in zip(rss_data, all_data_cert_anssi):
     description = entry["Description"]
 
     # Informations du certificat (type, date, éditeur, produits, versions, cve)
-    type_bulletin = rss_data["Type"]
+    type_bulletin = cert_data["Type du bulletin"]
     date_publication = cert_data["Date publication bulletin anssi"]
     editeur = cert_data["Editeur"]
     produits = ", ".join(cert_data["Produits impactés"])
@@ -239,7 +264,6 @@ for entry, cert_data in zip(rss_data, all_data_cert_anssi):
                 "Editeur": editeur,
                 "Produits impactés": produits,
                 "Versions concernés": versions,
-                "CVE du bulletin": cve_list,
                 "CVE": cve,  # Ajout du CVE précis dans la ligne
                 "CWE": cwe,
                 "CWE Description": cwe_desc,
@@ -254,7 +278,8 @@ for entry, cert_data in zip(rss_data, all_data_cert_anssi):
 # Créer un DataFrame avec toutes les données
 df = pd.DataFrame(rows)
 
+# Telecharger le dataFrame en CSV
+df.to_csv("data_anssi_csv", index=False)
+
 # Affichage du DataFrame
-print(df)
-df.to_csv("cert_anssi_data_2.csv", index=False)
 print(df)
