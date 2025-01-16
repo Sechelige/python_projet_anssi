@@ -7,16 +7,29 @@ import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.utils import PlotlyJSONEncoder
+from RSSMonitor import RSSMonitor 
+import time
 
 # Initialisation de l'application Flask
 app = Flask(__name__)
 app.secret_key = "your_secret_key"  # Remplacez par une clé secrète sécurisée
 
+
+monitor = RSSMonitor()
 CSV_FILE = "data_anssi.csv"
 df = pd.read_csv(CSV_FILE)
 
+
 # supprimer les doublons de ligne dans le DataFrame
 df.drop_duplicates(inplace=True)
+# remplacer les valeurs "Non disponible" par nan 
+df.replace("Non disponible", pd.NA, inplace=True)
+# supprimer les lignes avec des valeurs manquantes
+df.dropna(inplace=True)
+# supprimer les lignes avec des valeurs manquantes
+df['CVSS Score'] = pd.to_numeric(df['CVSS Score'], errors='coerce')
+df['EPSS'] = pd.to_numeric(df['EPSS'], errors='coerce')
+
 
 print (df)
 
@@ -93,17 +106,6 @@ def generate_charts():
                               template="plotly_white")
         charts['products_bar'] = json.dumps(fig_products, cls=PlotlyJSONEncoder)
 
-        # Heatmap des corrélations entre CVSS et EPSS
-        corr_matrix = df[['CVSS Score', 'EPSS']].corr()
-        fig_heatmap = go.Figure(data=go.Heatmap(
-            z=corr_matrix.values,
-            x=corr_matrix.columns,
-            y=corr_matrix.index,
-            colorscale="Viridis"
-        ))
-        fig_heatmap.update_layout(title="Corrélation entre CVSS et EPSS", template="plotly_white")
-        charts['heatmap'] = json.dumps(fig_heatmap, cls=PlotlyJSONEncoder)
-
         # Nuage de points entre CVSS et EPSS
         fig_scatter = px.scatter(df, x="CVSS Score", y="EPSS", color="CVSS Severity", size="EPSS",
                                  title="Relation entre CVSS et EPSS",
@@ -154,7 +156,10 @@ def home():
 def charts():
     """Page pour afficher les graphiques générés."""
     charts = generate_charts()
+    send_alert_email("Nouvelles vulnérabilités détectées", "mail_vulnerability.html")
     return render_template("charts.html", charts=charts)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, port=5002)
+    
+    monitor.stop()

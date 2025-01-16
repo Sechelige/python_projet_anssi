@@ -76,18 +76,6 @@
         </div>
 
         <div class="row">
-            <!-- Card: Heatmap -->
-            <div class="col-md-12 mb-4">
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        <h3 class="text-secondary">Corrélation entre CVSS et EPSS</h3>
-                        <div id="heatmap"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="row">
             <!-- Card: Scatter Plot -->
             <div class="col-md-12 mb-4">
                 <div class="card shadow-sm">
@@ -145,9 +133,6 @@
 
         var fig_products = {{ charts['products_bar']|safe }};
         Plotly.newPlot('products_bar', fig_products.data, fig_products.layout);
-
-        var fig_heatmap = {{ charts['heatmap']|safe }};
-        Plotly.newPlot('heatmap', fig_heatmap.data, fig_heatmap.layout);
 
         var fig_scatter = {{ charts['scatter_plot']|safe }};
         Plotly.newPlot('scatter_plot', fig_scatter.data, fig_scatter.layout);
